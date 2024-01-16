@@ -14,9 +14,11 @@ spec:
       labels:
         app: edge-service
     spec:
+      imagePullSecrets: 
+        - name: ghcr-login-secret
       containers:
-        - name: edge-service
-          image: edge-service
+        - name: catalog-service
+          image: ghcr.io/codingkiddo/catalog-service:latest
           imagePullPolicy: IfNotPresent
           lifecycle:
             preStop:
@@ -25,13 +27,41 @@ spec:
           ports:
             - containerPort: 9000
           env:
-            - name: CATALOG_SERVICE_URL
-              value: http://catalog-service
-            - name: ORDER_SERVICE_URL
-              value: http://order-service
-            - name: SPA_URL
-              value: http://polar-ui
+            - name: BPL_JVM_THREAD_COUNT
+              value: "50"
+            - name: WAIT_HOSTS
+              value: config-service:8888
             - name: SPRING_CLOUD_CONFIG_URI
               value: http://config-service
+            - name: CATALOG_SERVICE_URL
+              value: http://catalog-service:9002
+            - name: ORDER_SERVICE_URL
+              value: http://order-service:9003
+            - name: SPRING_DATASOURCE_USERNAME
+              value: compose-postgres
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: compose-postgres
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://polar-postgres/polardb_catalog
+            - name: SPRING_PROFILES_ACTIVE
+              value: prod
+            - name: SPA_URL
+              value: http://polar-ui
             - name: SPRING_REDIS_HOST
               value: polar-redis
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: edge-service
+  labels:
+    app: edge-service
+spec:
+  type: ClusterIP
+  selector:
+    app: edge-service
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 9000

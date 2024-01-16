@@ -1,0 +1,3 @@
+com/polarbookshop/edgeservice/web/WebEndpoints.class
+com/polarbookshop/edgeservice/EdgeServiceApplication.class
+com/polarbookshop/edgeservice/config/RateLimiterConfig.class
