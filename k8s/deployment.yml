@@ -17,8 +17,8 @@ spec:
       imagePullSecrets: 
         - name: ghcr-login-secret
       containers:
-        - name: catalog-service
-          image: ghcr.io/codingkiddo/catalog-service:latest
+        - name: edge-service
+          image: ghcr.io/codingkiddo/edge-service:latest
           imagePullPolicy: IfNotPresent
           lifecycle:
             preStop:
